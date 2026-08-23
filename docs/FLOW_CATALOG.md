@@ -16,7 +16,7 @@ assinaturas e tratamento de excecoes sem precisar interpretar codigo Python.
 | Engenheiro de plataforma | orchestration_platform_engineer |
 | Engenheiro de seguranca | security_automation_engineer |
 | Dona da excecao | Operacoes Documentais |
-| SLA | 1440 minutos |
+| SLA | 20 minutos |
 | Entrada | proposta_validada, documento_adesao |
 | Saida | documento_assinado, baixa_documental |
 | Assinaturas obrigatorias | 2 |
@@ -45,7 +45,7 @@ assinaturas e tratamento de excecoes sem precisar interpretar codigo Python.
 | Engenheiro de plataforma | orchestration_platform_engineer |
 | Engenheiro de seguranca | security_automation_engineer |
 | Dona da excecao | Central de Atendimento |
-| SLA | 720 minutos |
+| SLA | 20 minutos |
 | Entrada | solicitacao_atualizacao, documento_atualizacao |
 | Saida | aceite_assinado, cadastro_liberado |
 | Assinaturas obrigatorias | 1 |

@@ -75,7 +75,8 @@ review e SBOM. Veja as [evidencias e limites](docs/security/ASSESSMENT.md).
 A [observabilidade](docs/OBSERVABILITY.md) inclui métricas nativas, Prometheus, dashboard
 Grafana provisionado e regras para heartbeat e falhas, sem expor Prometheus no host.
 Um [painel operacional para TV](docs/BUSINESS_TV.md) mostra filas, SLA, assinaturas
-pendentes e conclusões por área.
+pendentes, tickets, SLA de 20 minutos e conclusões por área. Uma carga claramente
+sintética mantém entre 200 e 400 casos diários para a demonstração.
 O [modelo operacional](docs/OPERATING_MODEL.md) define personas de engenharia, ownership,
 segregação de funções e o fluxo de mudança.
 Responsabilidades, criação de DAGs e operação estão resumidas na [FAQ](docs/FAQ.md).

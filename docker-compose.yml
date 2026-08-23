@@ -19,6 +19,8 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "admin:admin,security:op,auditor:viewer"
     POC_AUDIT_HMAC_KEY: "${POC_AUDIT_HMAC_KEY:?configure POC_AUDIT_HMAC_KEY}"
     POC_BUSINESS_DB_DSN: "postgresql://poc_business:${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}@postgres/poc_business"
+    POC_SYNTHETIC_DAILY_MIN: "${POC_SYNTHETIC_DAILY_MIN:-200}"
+    POC_SYNTHETIC_DAILY_MAX: "${POC_SYNTHETIC_DAILY_MAX:-400}"
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "false"
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/config/simple_auth_manager_passwords.json.generated
     AIRFLOW__LOGGING__MASK_SECRETS_IN_LOGS: "true"

@@ -1,15 +1,16 @@
 # Painel das areas — modo TV
 
 O painel `Operacao Documental — TV` foi desenhado para leitura a distancia e atualiza a
-cada 30 segundos:
+cada 10 segundos:
 
 - processos em andamento;
 - assinaturas pendentes;
 - processos fora do SLA;
 - concluidos no dia;
 - fila por area;
-- vinte processos que exigem atencao, ordenados pelo prazo.
-- persona de engenharia responsavel por cada processo pendente.
+- tickets recebidos hoje e aderencia ao SLA de 20 minutos;
+- série temporal de entradas e últimos tickets processados;
+- vinte tickets que exigem atenção, com Processo ID no padrão TKT-AAAAMMDD-NNNNNN.
 
 URL depois da publicacao do Grafana:
 
@@ -31,3 +32,15 @@ read-only exclusiva para o dashboard.
 Cada card deve ter dono, definicao e acao esperada. A TV nao deve exibir nome, CPF, conta,
 conteudo documental ou justificativa sensivel. Identificadores tecnicos ficam restritos à
 tela de investigacao autenticada; a visao coletiva mostra somente agregados e filas.
+
+## Loop sintético diário
+
+O DAG synthetic_daily_workload roda a cada dois minutos e converge para uma meta
+determinística entre 200 e 400 tickets por dia. Cada rodada cria no máximo doze tickets,
+permitindo observar os cards e gráficos subindo durante a apresentação sem sobrecarregar
+a Honda. A meta pode ser ajustada por POC_SYNTHETIC_DAILY_MIN e
+POC_SYNTHETIC_DAILY_MAX.
+
+Todos esses registros têm is_synthetic=true, IDs iniciados por TKT e eventos com
+generator=daily-load-v1. Eles nunca enviam documentos ou mensagens reais. Os DAGs
+documentais separados continuam sendo a prova funcional de assinatura humana.

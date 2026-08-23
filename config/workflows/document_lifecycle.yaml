@@ -9,7 +9,7 @@ workflows:
     security_owner: security_automation_engineer
     exception_owner: Operacoes Documentais
     purpose: Formalizar a adesao do associado com assinatura das partes.
-    sla_minutes: 1440
+    sla_minutes: 20
     inputs: [proposta_validada, documento_adesao]
     outputs: [documento_assinado, baixa_documental]
     schedule: null
@@ -38,7 +38,7 @@ workflows:
     security_owner: security_automation_engineer
     exception_owner: Central de Atendimento
     purpose: Coletar aceite do associado para atualizacao cadastral.
-    sla_minutes: 720
+    sla_minutes: 20
     inputs: [solicitacao_atualizacao, documento_atualizacao]
     outputs: [aceite_assinado, cadastro_liberado]
     schedule: null

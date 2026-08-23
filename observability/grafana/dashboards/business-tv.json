@@ -2,48 +2,280 @@
   "editable": false,
   "panels": [
     {
-      "type": "stat", "title": "Em andamento",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}
+      "type": "stat",
+      "title": "Em andamento",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      }
     },
     {
-      "type": "stat", "title": "Aguardando assinaturas",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "targets": [{"rawSql": "SELECT COALESCE(sum(required_signatures-collected_signatures),0) AS value FROM process_instances WHERE status='AWAITING_SIGNATURES'", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0}
+      "type": "stat",
+      "title": "Aguardando assinaturas",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT COALESCE(sum(required_signatures-collected_signatures),0) AS value FROM process_instances WHERE status='AWAITING_SIGNATURES'",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      }
     },
     {
-      "type": "stat", "title": "Fora do SLA",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "thresholds": {"mode": "absolute", "steps": [{"color": "green"}, {"color": "red", "value": 1}]}}},
-      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL AND due_at < now()", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0}
+      "type": "stat",
+      "title": "Fora do SLA",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL AND due_at < now()",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      }
     },
     {
-      "type": "stat", "title": "Concluidos hoje",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at >= date_trunc('day', now())", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0}
+      "type": "stat",
+      "title": "Concluidos hoje",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at >= date_trunc('day', now())",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      }
     },
     {
-      "type": "bargauge", "title": "Fila por area",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "targets": [{"rawSql": "SELECT business_area AS metric, count(*) AS value FROM process_instances WHERE completed_at IS NULL GROUP BY business_area ORDER BY value DESC", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 6}
+      "type": "stat",
+      "title": "Tickets recebidos hoje",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT count(*) AS value FROM process_instances WHERE started_at >= date_trunc('day', now())",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      }
     },
     {
-      "type": "table", "title": "Processos que exigem atencao",
-      "datasource": {"type": "postgres", "uid": "business-postgres"},
-      "targets": [{"rawSql": "SELECT business_area AS \"Area\", workflow_name AS \"Processo\", automation_owner AS \"Responsavel\", status AS \"Status\", required_signatures-collected_signatures AS \"Assinaturas pendentes\", due_at AS \"Prazo\" FROM process_instances WHERE completed_at IS NULL ORDER BY due_at ASC LIMIT 20", "format": "table", "refId": "A"}],
-      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 6}
+      "type": "stat",
+      "title": "Dentro do SLA (20 min)",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red"
+              },
+              {
+                "color": "yellow",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT COALESCE(100.0 * count(*) FILTER (WHERE completed_at <= due_at) / NULLIF(count(*),0),100) AS value FROM process_instances WHERE completed_at >= date_trunc('day', now())",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      }
+    },
+    {
+      "type": "bargauge",
+      "title": "Fila por area",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT business_area AS metric, count(*) AS value FROM process_instances WHERE completed_at IS NULL GROUP BY business_area ORDER BY value DESC",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      }
+    },
+    {
+      "type": "table",
+      "title": "Tickets que exigem atenção",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT process_id AS \"Processo ID / Ticket\", business_area AS \"Área\", workflow_name AS \"Fluxo\", status AS \"Status\", required_signatures-collected_signatures AS \"Assinaturas pendentes\", due_at AS \"Prazo\" FROM process_instances WHERE completed_at IS NULL ORDER BY due_at ASC LIMIT 20",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 5
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Entrada de tickets — tempo real",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT $__timeGroupAlias(started_at,'5m'), count(*) AS \"Tickets\" FROM process_instances WHERE $__timeFilter(started_at) GROUP BY 1 ORDER BY 1",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 3,
+            "fillOpacity": 25
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      }
+    },
+    {
+      "type": "table",
+      "title": "Últimos tickets processados",
+      "datasource": {
+        "type": "postgres",
+        "uid": "business-postgres"
+      },
+      "targets": [
+        {
+          "rawSql": "SELECT process_id AS \"Processo ID / Ticket\", status AS \"Status\", started_at AS \"Entrada\", completed_at AS \"Conclusão\", CASE WHEN completed_at IS NULL THEN NULL ELSE round(extract(epoch FROM (completed_at-started_at))/60.0,1) END AS \"Tempo (min)\", CASE WHEN is_synthetic THEN 'SIM' ELSE 'NÃO' END AS \"Sintético\" FROM process_instances ORDER BY updated_at DESC LIMIT 15",
+          "format": "table",
+          "refId": "A"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      }
     }
   ],
-  "refresh": "30s",
+  "refresh": "10s",
   "schemaVersion": 41,
-  "tags": ["negocio", "tv", "documentos"],
-  "time": {"from": "now-24h", "to": "now"},
+  "tags": [
+    "negocio",
+    "tv",
+    "documentos"
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
   "title": "Operacao Documental — TV",
   "uid": "business-process-tv",
-  "version": 1
+  "version": 2
 }
