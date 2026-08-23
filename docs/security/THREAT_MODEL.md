@@ -9,6 +9,13 @@
 | Negacao de servico | limites de concorrencia, health checks, restart | HA, quotas e plano formal de DR |
 | Elevacao de privilegio | cap-drop, no-new-privileges, rede interna | rootless containers e hardening CIS do host |
 
+## Declaracao honesta
+
+Os controles sao inspirados em least privilege, zero trust, four-eyes e praticas SRE.
+Esta POC nao e certificada por Google, ISO, NIST, CIS, Bacen ou autoridade suica. Simple Auth,
+HTTP sobre a tailnet, segredos compartilhados entre componentes e logs locais sao riscos
+aceitos apenas para a demonstracao com dados sinteticos.
+
 ## Fronteiras de confianca
 
 1. Dispositivo autorizado entra na tailnet.
@@ -21,4 +28,3 @@
 - A tailnet e as identidades dos dispositivos sao administradas corretamente.
 - Somente mantenedores autorizados possuem SSH na honda.
 - Nenhum dado real deve ser introduzido na POC.
-

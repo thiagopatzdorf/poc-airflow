@@ -5,7 +5,8 @@
 - [x] Fernet, segredo de API e segredo JWT persistentes e distintos.
 - [x] PostgreSQL sem porta publicada.
 - [x] Interface ligada ao IP Tailscale da honda.
-- [x] Imagens e versoes fixadas; sem tag `latest`.
+- [x] Versoes fixadas; sem tag `latest`.
+- [ ] Fixar imagens por digest depois do primeiro pull validado.
 - [x] Containers com `no-new-privileges` e capabilities reduzidas.
 - [x] DAGs e codigo montados como somente leitura.
 - [x] Limites de concorrencia e health checks.
@@ -16,5 +17,5 @@
 - [ ] Integrar SSO/MFA e cofre corporativo antes de qualquer homologacao.
 - [ ] Enviar logs a SIEM/WORM e definir retencao formal.
 - [ ] Fazer pentest e revisar hardening CIS do host.
+- [ ] Substituir Simple Auth/HTTP por IdP corporativo com MFA e HTTPS.
 - [ ] Mapear controles para normativos internos, LGPD e regulacao aplicavel com Compliance.
-

@@ -15,6 +15,7 @@ Três DAGs transformam rotinas críticas em processos visíveis e rastreáveis:
 | `coop_transaction_monitoring` | monitoramento de transações | score explicável + revisão humana |
 | `coop_kyc_onboarding` | onboarding/KYC | nenhuma aprovação quando há alerta |
 | `coop_reconciliation` | conciliação | tolerância explícita + gate de integridade |
+| `coop_agentic_reconciliation_hitl` | agentes + aprovação | contratos assinados, L1/L2 e dry-run |
 
 Todos os dados são fictícios. A aplicação não se conecta a core bancário, não movimenta
 valores e não toma decisão real sobre associados.
@@ -27,6 +28,10 @@ valores e não toma decisão real sobre associados.
 - Containers sem privilégios adicionais e DAGs montadas como somente leitura.
 - Eventos sem payload pessoal, identificadores pseudonimizados e cadeia SHA-256 verificável.
 - Papéis separados para administrador, Segurança e Auditoria.
+
+O fluxo agentico usa dois agentes determinísticos simulados para ser reproduzível e não
+enviar dados para LLM externo. Eles apenas recomendam; política e duas pessoas distintas
+controlam o avanço, e a ação final não produz efeito externo.
 
 Veja [arquitetura](docs/ARCHITECTURE.md), [modelo de ameaças](docs/security/THREAT_MODEL.md)
 e [checklist de Segurança](docs/security/SECURITY_CHECKLIST.md). A politica operacional de
