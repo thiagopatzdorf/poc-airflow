@@ -1,0 +1,20 @@
+# Checklist para avaliacao de Seguranca
+
+- [x] Dados exclusivamente sinteticos; nenhum CPF, conta ou credencial real.
+- [x] Segredos gerados localmente, modo 0600 e ignorados pelo Git.
+- [x] Fernet, segredo de API e segredo JWT persistentes e distintos.
+- [x] PostgreSQL sem porta publicada.
+- [x] Interface ligada ao IP Tailscale da honda.
+- [x] Imagens e versoes fixadas; sem tag `latest`.
+- [x] Containers com `no-new-privileges` e capabilities reduzidas.
+- [x] DAGs e codigo montados como somente leitura.
+- [x] Limites de concorrencia e health checks.
+- [x] Logs sem payload sensivel; identificadores pseudonimizados.
+- [x] Trilha de auditoria com verificacao de adulteracao.
+- [x] Recuperacao por restart e dados persistidos em volume.
+- [ ] Executar scanner de imagem/SBOM na rede corporativa.
+- [ ] Integrar SSO/MFA e cofre corporativo antes de qualquer homologacao.
+- [ ] Enviar logs a SIEM/WORM e definir retencao formal.
+- [ ] Fazer pentest e revisar hardening CIS do host.
+- [ ] Mapear controles para normativos internos, LGPD e regulacao aplicavel com Compliance.
+

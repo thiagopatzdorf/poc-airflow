@@ -1,0 +1,3 @@
+# A POC usa apenas bibliotecas presentes na imagem oficial.
+# Dependencias futuras devem ser fixadas e revisadas antes de entrar aqui.
+
