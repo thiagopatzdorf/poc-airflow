@@ -19,6 +19,8 @@ flowchart LR
 - Um unico host e `LocalExecutor`: adequado a POC e ao limite de 7 GiB da honda.
 - PostgreSQL externo ao processo Airflow; SQLite e Celery foram descartados.
 - UI ligada somente ao IP Tailscale. Nenhuma porta do banco e publicada.
+- API e Grafana usam uma rede de borda apenas para o binding localhost; banco,
+  Prometheus e demais componentes permanecem somente na rede interna.
 - DAGs somente leitura dentro dos containers; dados e logs em volumes separados.
 - Dados de demonstracao sao sinteticos e identificados como `DEMO`.
 - Toda decisao de negocio produz evento pseudonimizado, datado e encadeado por SHA-256.

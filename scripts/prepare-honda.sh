@@ -8,6 +8,8 @@ sudo systemctl enable --now docker
 sudo usermod -aG docker patz
 sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 sudo tailscale set --operator=patz
+sudo chown -R 50000:0 /home/patz/poc-airflow/logs /home/patz/poc-airflow/data
+sudo chmod -R u+rwX,g+rwX,o-rwx /home/patz/poc-airflow/logs /home/patz/poc-airflow/data
 
 echo "Host preparado. Encerre e abra a sessao para aplicar o grupo docker."
 echo "Depois: cd ~/poc-airflow && make init && make up && tailscale serve --bg 8080 && make status"
