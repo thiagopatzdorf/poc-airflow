@@ -2,7 +2,7 @@
 
 - [x] Dados exclusivamente sinteticos; nenhum CPF, conta ou credencial real.
 - [x] Segredos gerados localmente, modo 0600 e ignorados pelo Git.
-- [x] Arquivo de senhas do Airflow compartilhado entre componentes e fora do Git.
+- [x] Arquivo de senhas compartilhado, fora do Git, acesso somente owner/grupo de runtime.
 - [x] Fernet, segredo de API e segredo JWT persistentes e distintos.
 - [x] PostgreSQL sem porta publicada.
 - [x] Interface ligada ao IP Tailscale da honda.
