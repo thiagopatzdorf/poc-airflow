@@ -9,6 +9,7 @@ Airflow --StatsD/UDP--> statsd-exporter <--scrape-- Prometheus <--query-- Grafan
 - StatsD exporter converte metricas nativas do Airflow para Prometheus.
 - Prometheus retém no máximo 15 dias ou 2 GB e não publica porta no host.
 - Grafana é provisionado por código, sem cadastro aberto ou acesso anônimo.
+- Downloads automáticos de plugins ficam desabilitados; o runtime nao precisa de egress.
 - Dashboard mostra disponibilidade, heartbeat, sucesso/falha e resultado por DAG/task.
 - Regras detectam ausência de métricas, scheduler sem heartbeat e falhas recentes.
 

@@ -146,6 +146,7 @@ services:
       GF_SERVER_ROOT_URL: "https://honda.tailf3785c.ts.net:8443"
       GF_ANALYTICS_REPORTING_ENABLED: "false"
       GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_PLUGINS_PREINSTALL_DISABLED: "true"
       BUSINESS_DB_PASSWORD: "${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}"
     ports:
       - "127.0.0.1:3000:3000"
