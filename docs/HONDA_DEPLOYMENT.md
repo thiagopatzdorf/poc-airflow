@@ -25,14 +25,16 @@ a sessao e rode:
 ```bash
 make init
 make up
+tailscale serve --bg 8080
 make status
 ```
 
 ## Acesso
 
-A interface escuta somente em `100.73.146.19:8080`, portanto e alcancavel pela tailnet e
-nao por `0.0.0.0`. Para a POC, o transporte Tailscale fornece criptografia de rede.
-HTTPS, IdP e MFA corporativos continuam sendo gates obrigatorios para homologacao.
+A interface escuta somente em `127.0.0.1:8080`. Tailscale Serve publica
+`https://honda.tailf3785c.ts.net` exclusivamente na tailnet, com TLS gerenciado.
+A politica de reautenticacao/MFA deve ser confirmada no IdP da tailnet; TLS e pertencer a
+tailnet, sozinhos, nao provam que MFA esteja exigido.
 
 ## Rollback
 
@@ -42,4 +44,3 @@ make down
 
 Isso para os containers e preserva o volume PostgreSQL. Nao use `docker compose down -v`
 sem autorizacao, pois essa opcao remove os dados persistidos.
-

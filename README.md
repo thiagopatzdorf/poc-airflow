@@ -48,7 +48,7 @@ make up
 make status
 ```
 
-Acesse `http://honda:8080`. Na primeira inicialização, a senha do Simple Auth Manager é
+Acesse `https://honda.tailf3785c.ts.net` pela tailnet. Na primeira inicialização, a senha do Simple Auth Manager é
 gerada pelo Airflow em `config/simple_auth_manager_passwords.json.generated`. Trate o arquivo
 como segredo, não o copie para tickets ou commits e troque o mecanismo por SSO/MFA antes de
 qualquer ambiente real.
@@ -63,6 +63,9 @@ make security-check
 
 O check local evita segredos triviais e valida a configuração, mas não substitui SAST,
 scanner de imagens, pentest nem avaliação independente.
+
+O GitHub executa uma esteira adicional com CodeQL, Bandit, Gitleaks, Trivy, dependency
+review e SBOM. Veja as [evidencias e limites](docs/security/ASSESSMENT.md).
 
 ## Operação
 

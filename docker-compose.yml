@@ -13,6 +13,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:?configure POSTGRES_PASSWORD}@postgres/${POSTGRES_DB:-airflow}"
     AIRFLOW__API__SECRET_KEY: "${AIRFLOW_API_SECRET_KEY:?configure AIRFLOW_API_SECRET_KEY}"
     AIRFLOW__API_AUTH__JWT_SECRET: "${AIRFLOW_JWT_SECRET:?configure AIRFLOW_JWT_SECRET}"
+    AIRFLOW__API__BASE_URL: "${AIRFLOW_PUBLIC_URL:-http://localhost:8080}"
     AIRFLOW__CORE__AUTH_MANAGER: airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "admin:admin,security:op,auditor:viewer"
     POC_AUDIT_HMAC_KEY: "${POC_AUDIT_HMAC_KEY:?configure POC_AUDIT_HMAC_KEY}"

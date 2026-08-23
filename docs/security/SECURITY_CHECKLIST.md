@@ -13,7 +13,7 @@
 - [x] Logs sem payload sensivel; identificadores pseudonimizados.
 - [x] Trilha de auditoria com verificacao de adulteracao.
 - [x] Recuperacao por restart e dados persistidos em volume.
-- [ ] Executar scanner de imagem/SBOM na rede corporativa.
+- [x] CI com SAST, secrets/IaC scan, scanner de imagem e SBOM.
 - [ ] Integrar SSO/MFA e cofre corporativo antes de qualquer homologacao.
 - [ ] Enviar logs a SIEM/WORM e definir retencao formal.
 - [ ] Fazer pentest e revisar hardening CIS do host.
