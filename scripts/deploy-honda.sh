@@ -54,6 +54,15 @@ docker compose build --pull
 docker compose run --rm airflow-init
 docker compose up -d --remove-orphans
 curl -fsS --retry 18 --retry-delay 5 --retry-all-errors "$health" >/dev/null
+for attempt in {1..12}; do
+  dags="$(docker compose exec -T api-server airflow dags list 2>/dev/null || true)"
+  if grep -q "synthetic_daily_workload" <<<"$dags" &&
+     grep -q "document_membership_agreement" <<<"$dags"; then
+    break
+  fi
+  [[ "$attempt" -lt 12 ]] || fail "required DAGs were not discovered"
+  sleep 5
+done
 [[ "$(docker compose exec -T api-server airflow dags list-import-errors -o json)" == "[]" ]] ||
   fail "DAG import errors"
 
