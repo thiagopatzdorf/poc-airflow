@@ -20,6 +20,9 @@ Três DAGs transformam rotinas críticas em processos visíveis e rastreáveis:
 Todos os dados são fictícios. A aplicação não se conecta a core bancário, não movimenta
 valores e não toma decisão real sobre associados.
 
+Além das DAGs demonstrativas, um [motor declarativo YAML](docs/DOCUMENT_WORKFLOWS.md) gera
+fluxos de recebimento, leitura, envio, espera por N assinaturas e baixa de documentos.
+
 ## Arquitetura e segurança
 
 - Airflow 3.3.1 oficial, Python 3.12, PostgreSQL 17 e `LocalExecutor`.

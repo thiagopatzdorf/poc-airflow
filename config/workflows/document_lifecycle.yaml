@@ -1,0 +1,39 @@
+schema_version: "1.0"
+workflows:
+  - id: membership_agreement
+    name: Adesao de associado
+    document_type: membership_agreement
+    schedule: null
+    retention_days: 1825
+    signature:
+      required_signatures: 2
+      expires_in_minutes: 30
+      signers:
+        - id: associated_person
+          display_name: Associado (simulado)
+          airflow_user: admin
+        - id: cooperative_representative
+          display_name: Representante da cooperativa (simulado)
+          airflow_user: security
+    reminders:
+      intervals_minutes: [10, 20]
+      max_attempts: 2
+    on_expiry: quarantine
+
+  - id: account_update_notice
+    name: Atualizacao cadastral
+    document_type: account_update_notice
+    schedule: null
+    retention_days: 1825
+    signature:
+      required_signatures: 1
+      expires_in_minutes: 30
+      signers:
+        - id: associated_person
+          display_name: Associado (simulado)
+          airflow_user: admin
+    reminders:
+      intervals_minutes: [15]
+      max_attempts: 1
+    on_expiry: quarantine
+
