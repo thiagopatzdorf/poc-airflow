@@ -75,6 +75,8 @@ make down         # parada preservando o banco
 
 Backups, restauração, atualização e resposta a incidentes devem seguir processos formais
 antes de produção. O roteiro da apresentação está em [docs/DEMO.md](docs/DEMO.md).
+O inventario e o unico passo privilegiado pendente da honda estao em
+[docs/HONDA_DEPLOYMENT.md](docs/HONDA_DEPLOYMENT.md).
 
 ## Princípios
 
