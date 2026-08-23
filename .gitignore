@@ -11,4 +11,3 @@ data/archive/*
 data/quarantine/*
 !data/**/.gitkeep
 config/simple_auth_manager_passwords.json.generated
-

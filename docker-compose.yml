@@ -19,6 +19,7 @@ x-airflow-common: &airflow-common
     POC_AUDIT_HMAC_KEY: "${POC_AUDIT_HMAC_KEY:?configure POC_AUDIT_HMAC_KEY}"
     POC_BUSINESS_DB_DSN: "postgresql://poc_business:${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}@postgres/poc_business"
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "false"
+    AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/config/simple_auth_manager_passwords.json.generated
     AIRFLOW__LOGGING__MASK_SECRETS_IN_LOGS: "true"
     AIRFLOW__LOGGING__LOGGING_LEVEL: INFO
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
