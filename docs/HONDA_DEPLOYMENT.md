@@ -44,3 +44,13 @@ make down
 
 Isso para os containers e preserva o volume PostgreSQL. Nao use `docker compose down -v`
 sem autorizacao, pois essa opcao remove os dados persistidos.
+
+## Release e deploy auditável
+
+O workflow release-candidate-and-deploy empacota tags v* e execuções manuais. Ele repete testes e análise estática, constrói e escaneia a imagem, e publica fonte, manifesto, checksums, SBOM SPDX e atestação. Tags geram evidência, mas não fazem deploy automaticamente.
+
+Deploy exige workflow_dispatch com deploy_honda=true, aprovação no GitHub Environment production-honda e runner auto-hospedado com labels self-hosted, linux, x64, honda e poc-airflow. Configure reviewer obrigatório, impeça autoaprovação quando disponível e proteja main. O runner usa o .env já existente na Honda; segredos nunca são inputs. Pertencer ao grupo Docker equivale praticamente a root, portanto esse runner deve ser dedicado e restrito ao repositório privado.
+
+O script scripts/deploy-honda.sh exige SHA completa igual ao checkout, serializa implantações com flock, salva snapshot imutável por commit e promove somente código/configuração. Ele preserva .env, credenciais geradas, logs, dados e volumes nomeados. Antes de confirmar, valida Compose, constrói, migra, sobe, verifica health e exige zero erro de importação das DAGs. Falha volta automaticamente ao último snapshot confirmado.
+
+A ativação operacional ainda requer criar o Environment protegido e instalar o runner dedicado na Honda. Até isso ocorrer, o job fica enfileirado e nenhum deploy automático é alegado. Migrações de banco podem ser forward-only: rollback volta código e containers, não schema ou dados. Mudanças incompatíveis exigem backup/restauração testados antes da promoção.
