@@ -3,11 +3,11 @@
 ## Automatizado em todo push/PR
 
 - testes unitarios e lint;
-- Bandit e CodeQL para SAST;
+- Bandit para SAST; CodeQL quando o plano/permissao do GitHub permitir;
 - Gitleaks para segredos no historico;
 - Trivy para dependencias, secrets, Docker e IaC;
 - dependency review em pull requests;
-- scan da imagem e resultado SARIF no GitHub Security;
+- scan da imagem; publicacao SARIF quando GitHub Security estiver habilitado;
 - SBOM SPDX da imagem como artefato.
 
 As actions sao referenciadas por SHA imutavel, com a tag documentada ao lado. O token da
@@ -24,4 +24,3 @@ CI usa permissoes minimas por job, checkout nao persiste credencial e jobs possu
 - SSO/MFA, segregacao de funcoes e recertificacao de acessos.
 
 Resultados automaticos reduzem risco e produzem evidencia; nao constituem certificacao.
-
