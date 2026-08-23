@@ -74,7 +74,7 @@ services:
   airflow-init:
     <<: *airflow-common
     restart: "no"
-    command: ["bash", "-c", "airflow db migrate"]
+    command: ["bash", "-c", "airflow db migrate && python -m poc.migrate_business_db"]
 
   api-server:
     <<: *airflow-common

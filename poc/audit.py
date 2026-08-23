@@ -17,7 +17,14 @@ def pseudonymize(value: str) -> str:
     return hashlib.sha256(f"poc-only::{value}".encode()).hexdigest()[:16]
 
 
-def append_event(event_type: str, subject_id: str, outcome: str, details: dict[str, Any]) -> dict[str, Any]:
+def append_event(
+    event_type: str,
+    subject_id: str,
+    outcome: str,
+    details: dict[str, Any],
+    *,
+    idempotency_key: str | None = None,
+) -> dict[str, Any]:
     audit_key = os.environ.get("POC_AUDIT_HMAC_KEY")
     if not audit_key:
         raise RuntimeError("POC_AUDIT_HMAC_KEY is required")
@@ -26,6 +33,11 @@ def append_event(event_type: str, subject_id: str, outcome: str, details: dict[s
         fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
         stream.seek(0)
         lines = [line for line in stream.read().splitlines() if line]
+        if idempotency_key:
+            for line in reversed(lines):
+                existing = json.loads(line)
+                if existing.get("idempotency_key") == idempotency_key:
+                    return existing
         previous_hash = json.loads(lines[-1])["event_hash"] if lines else "GENESIS"
         event = {
             "schema_version": 1,
@@ -36,6 +48,8 @@ def append_event(event_type: str, subject_id: str, outcome: str, details: dict[s
             "details": details,
             "previous_hash": previous_hash,
         }
+        if idempotency_key:
+            event["idempotency_key"] = idempotency_key
         canonical = json.dumps(event, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
         event["event_hash"] = hmac.new(audit_key.encode(), canonical.encode(), hashlib.sha256).hexdigest()
         stream.seek(0, os.SEEK_END)

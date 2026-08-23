@@ -34,7 +34,8 @@ def build_document_dag(flow):
                         "source": "SYNTHETIC", "content_digest": "sha256:demo"}
             start_process(process_id=document["document_id"], flow=flow, run_ref=context["run_id"])
             append_event("document_received", document["document_id"], "RECEIVED",
-                         {"document_type": flow.document_type, "source": "SYNTHETIC"})
+                         {"document_type": flow.document_type, "source": "SYNTHETIC"},
+                         idempotency_key=f'{context["run_id"]}:document_received')
             return document
 
         @task
@@ -42,7 +43,8 @@ def build_document_dag(flow):
             context = get_current_context()
             transition(document["document_id"], "VALIDATED", context["run_id"])
             append_event("document_read", document["document_id"], "VALIDATED",
-                         {"reader": "deterministic-demo-v1", "content_stored_in_log": False})
+                         {"reader": "deterministic-demo-v1", "content_stored_in_log": False},
+                         idempotency_key=f'{context["run_id"]}:document_read')
             return document
 
         @task
@@ -50,7 +52,8 @@ def build_document_dag(flow):
             context = get_current_context()
             transition(document["document_id"], "AWAITING_SIGNATURES", context["run_id"])
             append_event("document_sent", document["document_id"], "AWAITING_SIGNATURES",
-                         {"channel": "SIMULATED", "required_signatures": flow.required_signatures})
+                         {"channel": "SIMULATED", "required_signatures": flow.required_signatures},
+                         idempotency_key=f'{context["run_id"]}:document_sent')
             return document
 
         @task
@@ -59,7 +62,8 @@ def build_document_dag(flow):
             transition(document["document_id"], "COMPLETED", context["run_id"],
                        signature_delta=flow.required_signatures)
             append_event("document_discharged", document["document_id"], "COMPLETED",
-                         {"signatures": flow.required_signatures, "retention_days": flow.retention_days})
+                         {"signatures": flow.required_signatures, "retention_days": flow.retention_days},
+                         idempotency_key=f'{context["run_id"]}:document_discharged')
             return {"document_ref": document["document_id"], "status": "COMPLETED"}
 
         document = send_to_associated(read_and_validate(receive_document()))

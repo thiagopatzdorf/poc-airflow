@@ -38,6 +38,7 @@ CREATE TABLE process_events (
     new_status text NOT NULL,
     occurred_at timestamptz NOT NULL DEFAULT now(),
     run_ref text NOT NULL,
+    event_key text UNIQUE,
     details jsonb NOT NULL DEFAULT '{}'::jsonb
 );
 CREATE INDEX process_events_process_time_idx ON process_events (process_id, occurred_at);

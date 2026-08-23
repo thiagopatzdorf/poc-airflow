@@ -26,9 +26,10 @@ def start_process(*, process_id: str, flow, run_ref: str) -> dict:
              flow.document_type, flow.required_signatures, due_at),
         )
         cursor.execute(
-            """INSERT INTO process_events(process_id,event_type,new_status,run_ref,details)
-               VALUES (%s,'process_started','RECEIVED',%s,%s)""",
-            (process_id, run_ref, json.dumps({"synthetic": True})),
+            """INSERT INTO process_events(process_id,event_type,new_status,run_ref,details,event_key)
+               VALUES (%s,'process_started','RECEIVED',%s,%s,%s)
+               ON CONFLICT (event_key) DO NOTHING""",
+            (process_id, run_ref, json.dumps({"synthetic": True}), f"{run_ref}:process_started"),
         )
     return {"process_id": process_id, "status": "RECEIVED"}
 
@@ -46,15 +47,20 @@ def transition(process_id: str, new_status: str, run_ref: str, *, signature_delt
         if not row:
             raise ValueError("unknown process")
         previous = row[0]
+        event_key = f"{run_ref}:state:{new_status}"
+        cursor.execute(
+            """INSERT INTO process_events
+               (process_id,event_type,previous_status,new_status,run_ref,event_key)
+               VALUES (%s,'state_transition',%s,%s,%s,%s)
+               ON CONFLICT (event_key) DO NOTHING RETURNING event_id""",
+            (process_id, previous, new_status, run_ref, event_key),
+        )
+        if cursor.fetchone() is None:
+            return
         cursor.execute(
             """UPDATE process_instances SET status=%s,
                collected_signatures=collected_signatures+%s, updated_at=now(),
                completed_at=CASE WHEN %s='COMPLETED' THEN now() ELSE completed_at END,
                version=version+1 WHERE process_id=%s""",
             (new_status, signature_delta, new_status, process_id),
-        )
-        cursor.execute(
-            """INSERT INTO process_events(process_id,event_type,previous_status,new_status,run_ref)
-               VALUES (%s,'state_transition',%s,%s,%s)""",
-            (process_id, previous, new_status, run_ref),
         )
