@@ -21,6 +21,8 @@ flowchart LR
 - UI ligada somente ao IP Tailscale. Nenhuma porta do banco e publicada.
 - API e Grafana usam uma rede de borda apenas para o binding localhost; banco,
   Prometheus e demais componentes permanecem somente na rede interna.
+- Navegadores usam a URL HTTPS publica; workers usam a Execution API pelo DNS interno
+  do Compose, sem hairpin pela tailnet.
 - DAGs somente leitura dentro dos containers; dados e logs em volumes separados.
 - Dados de demonstracao sao sinteticos e identificados como `DEMO`.
 - Toda decisao de negocio produz evento pseudonimizado, datado e encadeado por SHA-256.
