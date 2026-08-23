@@ -1,0 +1,35 @@
+schema_version: "1.0"
+risk_tiers:
+  low:
+    required_reviews: [area_automation_engineer, orchestration_platform_engineer]
+  medium:
+    required_reviews: [area_automation_engineer, integration_data_engineer, security_automation_engineer]
+  high:
+    required_reviews: [business_owner, orchestration_platform_engineer, security_automation_engineer, audit_reliability_engineer]
+    four_eyes: true
+    automatic_effects_allowed: false
+promotion_states:
+  - PROPOSED
+  - TRIAGED
+  - DESIGNED
+  - IMPLEMENTED
+  - AUTOMATED_GATES_PASSED
+  - BUSINESS_APPROVED
+  - SECURITY_APPROVED
+  - STAGING_VALIDATED
+  - DEPLOYED_PAUSED
+  - OBSERVATION
+  - SCHEDULE_ENABLED
+  - REJECTED
+  - ROLLED_BACK
+mandatory_evidence:
+  - owner_and_purpose
+  - input_output_contract
+  - data_classification
+  - threat_model
+  - retry_idempotency_timeout
+  - tests_and_scan_results
+  - observability_and_alert_owner
+  - rollback_plan
+  - business_acceptance
+

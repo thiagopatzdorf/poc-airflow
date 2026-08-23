@@ -1,4 +1,4 @@
-.PHONY: bootstrap init up down status logs test lint security-check demo
+.PHONY: bootstrap init up down status logs test lint security-check demo business-catalog
 
 bootstrap:
 	./scripts/bootstrap-secrets.sh
@@ -7,7 +7,7 @@ init:
 	docker compose run --rm airflow-init
 
 up:
-	docker compose up -d --build postgres api-server scheduler dag-processor triggerer
+	docker compose up -d --build postgres api-server scheduler dag-processor triggerer statsd-exporter prometheus grafana
 
 down:
 	docker compose down
@@ -31,3 +31,5 @@ security-check:
 demo:
 	./scripts/demo.sh
 
+business-catalog:
+	python3 scripts/generate-business-catalog.py

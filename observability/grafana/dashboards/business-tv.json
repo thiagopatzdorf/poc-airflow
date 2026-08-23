@@ -1,0 +1,49 @@
+{
+  "editable": false,
+  "panels": [
+    {
+      "type": "stat", "title": "Em andamento",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "type": "stat", "title": "Aguardando assinaturas",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "targets": [{"rawSql": "SELECT COALESCE(sum(required_signatures-collected_signatures),0) AS value FROM process_instances WHERE status='AWAITING_SIGNATURES'", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0}
+    },
+    {
+      "type": "stat", "title": "Fora do SLA",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "thresholds": {"mode": "absolute", "steps": [{"color": "green"}, {"color": "red", "value": 1}]}}},
+      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at IS NULL AND due_at < now()", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0}
+    },
+    {
+      "type": "stat", "title": "Concluidos hoje",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "targets": [{"rawSql": "SELECT count(*) AS value FROM process_instances WHERE completed_at >= date_trunc('day', now())", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0}
+    },
+    {
+      "type": "bargauge", "title": "Fila por area",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "targets": [{"rawSql": "SELECT business_area AS metric, count(*) AS value FROM process_instances WHERE completed_at IS NULL GROUP BY business_area ORDER BY value DESC", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 6}
+    },
+    {
+      "type": "table", "title": "Processos que exigem atencao",
+      "datasource": {"type": "postgres", "uid": "business-postgres"},
+      "targets": [{"rawSql": "SELECT business_area AS \"Area\", workflow_name AS \"Processo\", automation_owner AS \"Responsavel\", status AS \"Status\", required_signatures-collected_signatures AS \"Assinaturas pendentes\", due_at AS \"Prazo\" FROM process_instances WHERE completed_at IS NULL ORDER BY due_at ASC LIMIT 20", "format": "table", "refId": "A"}],
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 6}
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 41,
+  "tags": ["negocio", "tv", "documentos"],
+  "time": {"from": "now-24h", "to": "now"},
+  "title": "Operacao Documental — TV",
+  "uid": "business-process-tv",
+  "version": 1
+}

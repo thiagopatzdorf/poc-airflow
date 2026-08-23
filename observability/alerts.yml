@@ -1,0 +1,24 @@
+groups:
+  - name: poc-airflow
+    rules:
+      - alert: AirflowMetricsUnavailable
+        expr: up{job="airflow"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Exportador de metricas do Airflow indisponivel
+      - alert: AirflowSchedulerHeartbeatMissing
+        expr: increase(airflow_scheduler_heartbeat_total[5m]) == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Scheduler sem heartbeat
+      - alert: AirflowTaskFailures
+        expr: increase(airflow_task_failures_total[15m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Uma ou mais tasks falharam nos ultimos 15 minutos
+

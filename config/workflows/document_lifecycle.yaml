@@ -3,6 +3,15 @@ workflows:
   - id: membership_agreement
     name: Adesao de associado
     document_type: membership_agreement
+    business_owner: Cadastro e Relacionamento
+    automation_owner: area_automation_engineer
+    platform_owner: orchestration_platform_engineer
+    security_owner: security_automation_engineer
+    exception_owner: Operacoes Documentais
+    purpose: Formalizar a adesao do associado com assinatura das partes.
+    sla_minutes: 1440
+    inputs: [proposta_validada, documento_adesao]
+    outputs: [documento_assinado, baixa_documental]
     schedule: null
     retention_days: 1825
     signature:
@@ -23,6 +32,15 @@ workflows:
   - id: account_update_notice
     name: Atualizacao cadastral
     document_type: account_update_notice
+    business_owner: Cadastro
+    automation_owner: area_automation_engineer
+    platform_owner: orchestration_platform_engineer
+    security_owner: security_automation_engineer
+    exception_owner: Central de Atendimento
+    purpose: Coletar aceite do associado para atualizacao cadastral.
+    sla_minutes: 720
+    inputs: [solicitacao_atualizacao, documento_atualizacao]
+    outputs: [aceite_assinado, cadastro_liberado]
     schedule: null
     retention_days: 1825
     signature:
@@ -36,4 +54,3 @@ workflows:
       intervals_minutes: [15]
       max_attempts: 1
     on_expiry: quarantine
-

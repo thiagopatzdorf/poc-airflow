@@ -1,0 +1,46 @@
+{
+  "annotations": {"list": []},
+  "editable": false,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Airflow metrics up",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "up{job=\"airflow\"}", "refId": "A"}],
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Scheduler heartbeat",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "rate(airflow_scheduler_heartbeat_total[5m])", "refId": "A"}],
+      "gridPos": {"h": 8, "w": 9, "x": 6, "y": 0}
+    },
+    {
+      "type": "timeseries",
+      "title": "Task outcomes",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [
+        {"expr": "increase(airflow_task_successes_total[15m])", "legendFormat": "success", "refId": "A"},
+        {"expr": "increase(airflow_task_failures_total[15m])", "legendFormat": "failed", "refId": "B"}
+      ],
+      "gridPos": {"h": 8, "w": 9, "x": 15, "y": 0}
+    },
+    {
+      "type": "table",
+      "title": "Task finish by DAG/state",
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "targets": [{"expr": "sum by (dag_id, state) (airflow_task_finish_total)", "format": "table", "instant": true, "refId": "A"}],
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 8}
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 41,
+  "tags": ["airflow", "poc", "cooperativa"],
+  "templating": {"list": []},
+  "time": {"from": "now-6h", "to": "now"},
+  "title": "POC Airflow — Operacao",
+  "uid": "poc-airflow-ops",
+  "version": 1
+}
+

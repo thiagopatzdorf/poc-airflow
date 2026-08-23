@@ -6,7 +6,11 @@ from typing import Any
 import yaml
 
 TOP_KEYS = {"schema_version", "workflows"}
-WORKFLOW_KEYS = {"id", "name", "document_type", "schedule", "retention_days", "signature", "reminders", "on_expiry"}
+WORKFLOW_KEYS = {
+    "id", "name", "document_type", "schedule", "retention_days", "signature", "reminders",
+    "on_expiry", "business_owner", "exception_owner", "purpose", "sla_minutes", "inputs", "outputs",
+    "automation_owner", "platform_owner", "security_owner",
+}
 SIGNATURE_KEYS = {"required_signatures", "expires_in_minutes", "signers"}
 SIGNER_KEYS = {"id", "display_name", "airflow_user"}
 REMINDER_KEYS = {"intervals_minutes", "max_attempts"}
@@ -25,6 +29,15 @@ class DocumentWorkflow:
     id: str
     name: str
     document_type: str
+    business_owner: str
+    automation_owner: str
+    platform_owner: str
+    security_owner: str
+    exception_owner: str
+    purpose: str
+    sla_minutes: int
+    inputs: tuple[str, ...]
+    outputs: tuple[str, ...]
     schedule: str | None
     retention_days: int
     required_signatures: int
@@ -108,12 +121,62 @@ def parse_workflows(path: Path) -> list[DocumentWorkflow]:
         on_expiry = item.get("on_expiry")
         if on_expiry not in EXPIRY_ACTIONS:
             raise ValueError(f"{location}: invalid expiry action")
+        sla = item.get("sla_minutes")
+        if not isinstance(sla, int) or not 1 <= sla <= 43200:
+            raise ValueError(f"{location}: invalid business SLA")
+        inputs = item.get("inputs")
+        outputs = item.get("outputs")
+        if not isinstance(inputs, list) or not inputs or not isinstance(outputs, list) or not outputs:
+            raise ValueError(f"{location}: inputs/outputs must be non-empty lists")
+        normalized_inputs = tuple(_identifier(value, f"{location}.inputs") for value in inputs)
+        normalized_outputs = tuple(_identifier(value, f"{location}.outputs") for value in outputs)
+        business_owner = str(item.get("business_owner", "")).strip()
+        exception_owner = str(item.get("exception_owner", "")).strip()
+        purpose = str(item.get("purpose", "")).strip()
+        if not all((business_owner, exception_owner, purpose)):
+            raise ValueError(f"{location}: business metadata is required")
+        automation_owner = _identifier(item.get("automation_owner"), f"{location}.automation_owner")
+        platform_owner = _identifier(item.get("platform_owner"), f"{location}.platform_owner")
+        security_owner = _identifier(item.get("security_owner"), f"{location}.security_owner")
         result.append(DocumentWorkflow(
             id=workflow_id, name=str(item.get("name", "")),
             document_type=_identifier(item.get("document_type"), f"{location}.document_type"),
+            business_owner=business_owner, exception_owner=exception_owner, purpose=purpose,
+            automation_owner=automation_owner, platform_owner=platform_owner,
+            security_owner=security_owner,
+            sla_minutes=sla, inputs=normalized_inputs, outputs=normalized_outputs,
             schedule=item.get("schedule"), retention_days=retention,
             required_signatures=required, expires_in_minutes=expiry, signers=tuple(signers),
             reminder_intervals=tuple(intervals), max_reminders=max_reminders, on_expiry=on_expiry,
         ))
     return result
 
+
+def business_markdown(flow: DocumentWorkflow) -> str:
+    signers = "\n".join(f"- {signer.display_name}" for signer in flow.signers)
+    return f"""## {flow.name}
+
+**Objetivo:** {flow.purpose}
+
+| Campo | Definicao |
+|---|---|
+| Area responsavel | {flow.business_owner} |
+| Engenheiro dono da automacao | {flow.automation_owner} |
+| Engenheiro de plataforma | {flow.platform_owner} |
+| Engenheiro de seguranca | {flow.security_owner} |
+| Dona da excecao | {flow.exception_owner} |
+| SLA | {flow.sla_minutes} minutos |
+| Entrada | {", ".join(flow.inputs)} |
+| Saida | {", ".join(flow.outputs)} |
+| Assinaturas obrigatorias | {flow.required_signatures} |
+| Expiracao | {flow.expires_in_minutes} minutos |
+| Destino ao expirar | {flow.on_expiry} |
+
+### Signatarios
+
+{signers}
+
+### Etapas
+
+`Receber → Ler e validar → Enviar → Aguardar assinaturas → Baixa documental`
+"""

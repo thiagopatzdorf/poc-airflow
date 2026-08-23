@@ -9,6 +9,9 @@ flowchart LR
     T --> A[Audit log hash-chain]
     T --> Q[Fila logica de excecoes]
     H[Health check Factory] --> API
+    T --> SD[StatsD exporter]
+    SD --> P[Prometheus]
+    P --> G[Grafana]
 ```
 
 ## Decisoes
@@ -26,4 +29,3 @@ flowchart LR
 Isto e uma POC controlada, nao uma homologacao para producao bancaria. Alta disponibilidade,
 SIEM remoto, HSM/KMS, SSO corporativo, backup imutavel, segregacao fisica de ambientes e
 integracoes reais ficam explicitamente fora do escopo.
-

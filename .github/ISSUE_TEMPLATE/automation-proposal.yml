@@ -1,0 +1,38 @@
+name: Proposta de automacao
+description: Entrada padronizada para avaliar nova automacao
+title: "[automacao] "
+labels: ["automation-proposal"]
+body:
+  - type: textarea
+    id: problem
+    attributes: {label: Problema e processo manual atual}
+    validations: {required: true}
+  - type: textarea
+    id: outcome
+    attributes: {label: Resultado e beneficio mensuravel}
+    validations: {required: true}
+  - type: input
+    id: owner
+    attributes: {label: Area e engenheiro dono}
+    validations: {required: true}
+  - type: textarea
+    id: contract
+    attributes: {label: Entradas, saidas, volume, frequencia e SLA}
+    validations: {required: true}
+  - type: dropdown
+    id: data
+    attributes:
+      label: Classificacao de dados
+      options: [publico, interno, pessoal, sensivel, a_classificar]
+    validations: {required: true}
+  - type: dropdown
+    id: effect
+    attributes:
+      label: Maior efeito possivel
+      options: [somente_leitura, notificacao, documento_ou_assinatura, financeiro_ou_bloqueio]
+    validations: {required: true}
+  - type: textarea
+    id: failure
+    attributes: {label: Comportamento em falha timeout ou duplicidade}
+    validations: {required: true}
+

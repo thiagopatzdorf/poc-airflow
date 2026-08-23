@@ -17,10 +17,15 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__AUTH_MANAGER: airflow.api_fastapi.auth.managers.simple.simple_auth_manager.SimpleAuthManager
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "admin:admin,security:op,auditor:viewer"
     POC_AUDIT_HMAC_KEY: "${POC_AUDIT_HMAC_KEY:?configure POC_AUDIT_HMAC_KEY}"
+    POC_BUSINESS_DB_DSN: "postgresql://poc_business:${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}@postgres/poc_business"
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "false"
     AIRFLOW__LOGGING__MASK_SECRETS_IN_LOGS: "true"
     AIRFLOW__LOGGING__LOGGING_LEVEL: INFO
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+    AIRFLOW__METRICS__STATSD_ON: "true"
+    AIRFLOW__METRICS__STATSD_HOST: statsd-exporter
+    AIRFLOW__METRICS__STATSD_PORT: "9125"
+    AIRFLOW__METRICS__STATSD_PREFIX: airflow
     AIRFLOW__SCHEDULER__MAX_THREADS: "2"
     AIRFLOW__CORE__PARALLELISM: "4"
     AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: "3"
@@ -50,8 +55,10 @@ services:
       POSTGRES_USER: "${POSTGRES_USER:-airflow}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?configure POSTGRES_PASSWORD}"
       POSTGRES_DB: "${POSTGRES_DB:-airflow}"
+      BUSINESS_DB_PASSWORD: "${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./database/init-business-db.sh:/docker-entrypoint-initdb.d/20-business-db.sh:ro
     networks: [backend]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-airflow} -d ${POSTGRES_DB:-airflow}"]
@@ -97,8 +104,63 @@ services:
     <<: *airflow-common
     command: triggerer
 
+  statsd-exporter:
+    image: prom/statsd-exporter:v0.28.0
+    restart: unless-stopped
+    command: ["--statsd.mapping-config=/etc/statsd-exporter/mappings.yml"]
+    volumes:
+      - ./observability/statsd-mappings.yml:/etc/statsd-exporter/mappings.yml:ro
+    networks: [backend]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+
+  prometheus:
+    image: prom/prometheus:v3.6.0
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+      - --storage.tsdb.retention.size=2GB
+      - --web.enable-lifecycle
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus-data:/prometheus
+    networks: [backend]
+    depends_on: [statsd-exporter]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:?configure GRAFANA_ADMIN_PASSWORD}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_SECURITY_COOKIE_SECURE: "true"
+      GF_SECURITY_COOKIE_SAMESITE: strict
+      GF_SERVER_ROOT_URL: "https://honda.tailf3785c.ts.net:8443"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      BUSINESS_DB_PASSWORD: "${BUSINESS_DB_PASSWORD:?configure BUSINESS_DB_PASSWORD}"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks: [backend]
+    depends_on: [prometheus]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
 volumes:
   postgres-data:
+  prometheus-data:
+  grafana-data:
 
 networks:
   backend:

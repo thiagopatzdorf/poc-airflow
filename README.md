@@ -22,6 +22,8 @@ valores e não toma decisão real sobre associados.
 
 Além das DAGs demonstrativas, um [motor declarativo YAML](docs/DOCUMENT_WORKFLOWS.md) gera
 fluxos de recebimento, leitura, envio, espera por N assinaturas e baixa de documentos.
+As áreas validam a mesma definição por um [catálogo de fluxos](docs/FLOW_CATALOG.md)
+gerado em linguagem de negócio.
 
 ## Arquitetura e segurança
 
@@ -69,6 +71,16 @@ scanner de imagens, pentest nem avaliação independente.
 
 O GitHub executa uma esteira adicional com CodeQL, Bandit, Gitleaks, Trivy, dependency
 review e SBOM. Veja as [evidencias e limites](docs/security/ASSESSMENT.md).
+
+A [observabilidade](docs/OBSERVABILITY.md) inclui métricas nativas, Prometheus, dashboard
+Grafana provisionado e regras para heartbeat e falhas, sem expor Prometheus no host.
+Um [painel operacional para TV](docs/BUSINESS_TV.md) mostra filas, SLA, assinaturas
+pendentes e conclusões por área.
+O [modelo operacional](docs/OPERATING_MODEL.md) define personas de engenharia, ownership,
+segregação de funções e o fluxo de mudança.
+Responsabilidades, criação de DAGs e operação estão resumidas na [FAQ](docs/FAQ.md).
+Toda automação segue um [fluxo de aprovação e promoção](docs/AUTOMATION_PROMOTION.md) antes
+de ter seu schedule habilitado no Airflow.
 
 ## Operação
 
