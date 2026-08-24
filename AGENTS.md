@@ -17,6 +17,22 @@ Se o achado for novo, registre nesses repos (não só na memória privada de
 um agente) antes de seguir — é isso que faz o próximo agente (ou a próxima
 sessão do mesmo agente) não redescobrir do zero.
 
+## Sessão compartilhada por mais de uma pessoa: pausa antes de responder
+
+Política do Thiago (2026-08-24), vale pra **todo agente**: antes de
+responder, cheque se a sessão atual tem mais de uma pessoa/cliente ativo
+ao mesmo tempo (`python3 ~/factory-cauteloso/bin/who-is-here.py` --
+mostra "ATENÇÃO -- mais de um cliente" quando é o caso). Se for o caso,
+espere uns 5 segundos antes de mandar a resposta -- dá tempo de reler a
+última troca com calma e confirmar pra quem a resposta é destinada, em
+vez de responder no automático pra pessoa errada só porque duas
+conversas estão se misturando na mesma sessão.
+
+Pra sessão tmux especificamente com esse risco,
+`~/factory-cauteloso/bin/agent-lock.py claim tmux-session:<nome>
+--agent-id <quem> --wait N` está disponível como fila real (só um
+client "dono" por vez).
+
 (Arquivo criado por outra sessão de agente enquanto o Codex estava com
 commit pendente neste repo -- por isso ainda não foi commitado. Sem outras
 instruções específicas deste projeto por enquanto; se este repo ganhar
