@@ -1,14 +1,15 @@
 """Gera DAGs documentais exclusivamente a partir do YAML validado."""
-from datetime import datetime, timedelta, timezone
 import hashlib
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from airflow.sdk import dag, task
-from airflow.sdk import get_current_context
+
 from airflow.providers.standard.operators.hitl import ApprovalOperator
+from airflow.sdk import dag, get_current_context, task
+
 from poc.audit import append_event
 from poc.policies import retry_policy
-from poc.workflow_schema import business_markdown, parse_workflows
 from poc.process_store import start_process, transition
+from poc.workflow_schema import business_markdown, parse_workflows
 
 CONFIG_PATH = Path("/opt/airflow/config/workflows/document_lifecycle.yaml")
 

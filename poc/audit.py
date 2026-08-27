@@ -1,11 +1,11 @@
 """Trilha append-only encadeada por hash, sem armazenar payload sensivel."""
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import hmac
 import json
 import os
-import fcntl
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any

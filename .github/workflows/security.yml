@@ -33,7 +33,13 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Install audit tooling
-        run: python -m pip install --disable-pip-version-check pytest ruff bandit pip-audit
+        # Versões FIXADAS de propósito. Antes era `pip install ... ruff ...`
+        # sem pin: cada execução baixava a última versão, então uma release
+        # mais rígida do linter deixava o CI vermelho sozinho, sem ninguém
+        # tocar no código -- foi o que aconteceu em 23/08/2026 e bloqueou
+        # toda PR do dependabot por 4+ dias. Ferramenta de CI sem pin é uma
+        # dependência que muda quando quer.
+        run: python -m pip install --disable-pip-version-check pytest ruff==0.16.4 bandit pip-audit
       - name: Unit tests
         run: pytest -q
       - name: Business catalog is reproducible

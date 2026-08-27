@@ -1,0 +1,34 @@
+# Contrato de lint explícito.
+#
+# Por que este arquivo existe (2026-08-27): o CI rodava `ruff check` SEM
+# configuração e instalava `ruff` SEM versão fixada. O conjunto de regras era,
+# na prática, "o padrão da versão que o pip baixou hoje" -- então quando o Ruff
+# publicou uma versão com padrões mais rígidos, o CI ficou vermelho sozinho,
+# sem ninguém tocar no código. A `main` está falhando desde 23/08 por isso, e
+# isso bloqueia toda PR do dependabot (3 paradas há 4+ dias).
+#
+# CI vermelho por motivo que ninguém escolheu é pior que CI ausente: ele ensina
+# o time a ignorar vermelho, e aí a próxima falha de verdade passa batida.
+target-version = "py311"
+# 120, não o padrão 88 nem o "que passa sem mexer em nada".
+# Medido no código real deste repo: p95=93, p99=108, máximo=129 caracteres.
+# 88 exigiria reescrever 69 linhas; 130 passaria verde sem tocar em nada, mas
+# seria escolher o limite pelo resultado em vez de pelo critério. 120 é padrão
+# corrente e deixa exatamente 3 linhas pra ajustar.
+line-length = 120
+
+[lint]
+# Explícito em vez de herdado: E/F são o núcleo (pycodestyle + pyflakes), I
+# organiza imports, e as demais são as que o repo já respeitava na prática.
+# Escopo deliberadamente igual ao que o código JÁ satisfaz. Ampliar o conjunto
+# é decisão de quem mantém o repo, não efeito colateral de destravar o CI --
+# selecionar UP/B/PL/TRY inteiros aqui levantou 103 achados pré-existentes, o
+# que trocaria um CI quebrado por outro.
+select = ["E", "F", "I"]
+
+# Nota para quem for ampliar o select depois: TRY004 (pedir TypeError em
+# validação de tipo) NÃO deve ser adotado sem cuidado -- `parse_workflows`
+# levanta ValueError para schema inválido e os testes dependem disso
+# (`pytest.raises(ValueError)` em test_workflow_schema.py e
+# test_synthetic_load.py). Adotar a regra seria quebra de API disfarçada de
+# lint.

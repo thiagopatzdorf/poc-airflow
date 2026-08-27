@@ -2,9 +2,10 @@ from datetime import datetime, timezone
 from decimal import Decimal
 
 from airflow.sdk import dag, task
+
 from poc.audit import append_event
-from poc.rules import transaction_risk
 from poc.policies import retry_policy
+from poc.rules import transaction_risk
 
 
 @dag(
@@ -30,8 +31,15 @@ def transaction_monitoring():
     def evaluate(rows):
         results = []
         for row in rows:
-            score, decision = transaction_risk(Decimal(row["amount"]), row["country"], row["attempts"], row["new_device"])
-            append_event("transaction_risk_evaluated", row["id"], decision, {"risk_score": score, "rule_version": "poc-v1"})
+            score, decision = transaction_risk(
+                Decimal(row["amount"]), row["country"], row["attempts"], row["new_device"]
+            )
+            append_event(
+                "transaction_risk_evaluated",
+                row["id"],
+                decision,
+                {"risk_score": score, "rule_version": "poc-v1"},
+            )
             results.append({"transaction_ref": row["id"], "risk_score": score, "decision": decision})
         return results
 

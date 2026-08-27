@@ -1,6 +1,8 @@
 from pathlib import Path
+
 import pytest
 import yaml
+
 from poc.workflow_schema import business_markdown, parse_workflows
 
 CONFIG = Path(__file__).parents[1] / "config/workflows/document_lifecycle.yaml"

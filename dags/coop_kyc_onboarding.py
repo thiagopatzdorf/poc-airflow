@@ -1,8 +1,10 @@
 from datetime import datetime, timezone
+
 from airflow.sdk import dag, task
+
 from poc.audit import append_event
-from poc.rules import kyc_decision
 from poc.policies import retry_policy
+from poc.rules import kyc_decision
 
 
 @dag(dag_id="coop_kyc_onboarding", description="Onboarding KYC sintetico com human-in-the-loop", schedule=None,
@@ -20,7 +22,12 @@ def kyc_onboarding():
         for subject, document_valid, sanctions_hit, address_match in cases:
             decision = kyc_decision(document_valid, sanctions_hit, address_match)
             summary[decision] += 1
-            append_event("kyc_decision", subject, decision, {"rule_version": "poc-v1", "human_required": decision != "approved"})
+            append_event(
+                "kyc_decision",
+                subject,
+                decision,
+                {"rule_version": "poc-v1", "human_required": decision != "approved"},
+            )
         return summary
 
     validate_cases()

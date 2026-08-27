@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
 from decimal import Decimal
+
 from airflow.sdk import dag, task
+
 from poc.audit import append_event, verify_chain
-from poc.rules import reconcile
 from poc.policies import retry_policy
+from poc.rules import reconcile
 
 
 @dag(dag_id="coop_reconciliation", description="Conciliacao sintetica e verificacao da trilha de auditoria",
