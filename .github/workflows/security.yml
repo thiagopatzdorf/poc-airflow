@@ -74,6 +74,12 @@ jobs:
           persist-credentials: false
       - name: Gitleaks
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          # Exigido desde uma mudança incompatível da própria action: sem isto
+          # ela aborta com "GITHUB_TOKEN is now required to scan pull requests"
+          # ANTES de varrer qualquer coisa. O job ficava vermelho sem nunca ter
+          # procurado um segredo -- pior que não rodar, porque parecia que rodou.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Trivy filesystem, secrets and IaC
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
