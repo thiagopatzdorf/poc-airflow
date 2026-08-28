@@ -1,5 +1,6 @@
 """Contratos seguros para agentes: recomendacao estruturada, sem ferramentas."""
 from __future__ import annotations
+
 import hashlib
 import json
 

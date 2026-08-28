@@ -1,5 +1,6 @@
 from pathlib import Path
-import poc.audit as audit
+
+from poc import audit
 
 
 def test_hash_chain_detects_tampering(tmp_path: Path, monkeypatch):

@@ -1,8 +1,10 @@
 """Schema fechado para transformar YAML declarativo em DAG sem executar codigo arbitrario."""
 from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
 import yaml
 
 TOP_KEYS = {"schema_version", "workflows"}
